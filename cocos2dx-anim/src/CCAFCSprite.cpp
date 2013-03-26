@@ -268,13 +268,6 @@ void CCAFCSprite::replaceTextures(CCTexture2D* tex, ...) {
 }
 
 void CCAFCSprite::replaceTextures(CCTexture2D** tex, int count) {
-	/*
-	 * 这里我们不首先释放老的batchnode, 这是因为如果replaceTextures传进来
-	 * 的贴图有部分和以前一样, 那么如果先释放老的, 会导致这些贴图对象被释放,
-	 * 从而后面再创建新的batchnode就会有问题. 这个道理和setter里面要先retain
-	 * 进来的, 再release老的是一个道理
-	 */
-
 	// create new sprite batch node for new set of textures
 	SpriteBatchNodePtrList tmp;
 	for(int i = 0; i < count; i++) {
