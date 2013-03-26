@@ -8,13 +8,15 @@ TESTLAYER_CREATE_FUNC(AnimArctic);
 TESTLAYER_CREATE_FUNC(AnimAuroraGT);
 TESTLAYER_CREATE_FUNC(AnimSpriteX);
 TESTLAYER_CREATE_FUNC(AnimSpriteX2011);
+TESTLAYER_CREATE_FUNC(AnimClipMappingAuroraGT);
 
 static NEWTESTFUNC createFunctions[] = {
     CF(AnimMotionWelder),
     CF(AnimArctic),
     CF(AnimAuroraGT),
     CF(AnimSpriteX),
-    CF(AnimSpriteX2011)
+    CF(AnimSpriteX2011),
+    CF(AnimClipMappingAuroraGT)
 };
 
 static int sceneIdx=-1;
@@ -587,4 +589,93 @@ void AnimSpriteX2011::update(float dt) {
 std::string AnimSpriteX2011::subtitle()
 {
     return "SpriteX 2011";
+}
+
+//------------------------------------------------------------------
+//
+// Clip Mapping (Aurora GT)
+//
+//------------------------------------------------------------------
+void AnimClipMappingAuroraGT::onEnter()
+{
+    AnimDemo::onEnter();
+    
+    // surface
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+    
+    // texture
+    CCTextureCache* tc = CCTextureCache::sharedTextureCache();
+    CCTexture2D* tex = tc->addImage("Files/prince.png");
+    
+    // animation 1
+    m_sprite1 = CCAuroraSprite::create("Files/prince.bsprite", 78, tex, NULL);
+    m_sprite1->setLoopCount(-1);
+    m_sprite1->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height / 2));
+    m_sprite1->setUnitInterval(0.1f);
+    m_sprite1->setDebugDrawFrameRect(true);
+    m_sprite1->setDebugDrawCollisionRect(true);
+    addChild(m_sprite1);
+    
+    // create clip mapping and add them to sprite
+    CCAFCClipMapping* mapping = CCAFCClipMapping::createWithAuroraGT(1, "Files/prince_m00.mmp");
+    m_sprite1->addClipMapping(mapping);
+    mapping = CCAFCClipMapping::createWithAuroraGT(2, "Files/prince_m01.mmp");
+    m_sprite1->addClipMapping(mapping);
+    mapping = CCAFCClipMapping::createWithAuroraGT(3, "Files/prince_m02.mmp");
+    m_sprite1->addClipMapping(mapping);
+    mapping = CCAFCClipMapping::createWithAuroraGT(4, "Files/prince_m03.mmp");
+    m_sprite1->addClipMapping(mapping);
+    mapping = CCAFCClipMapping::createWithAuroraGT(5, "Files/prince_m04.mmp");
+    m_sprite1->addClipMapping(mapping);
+    mapping = CCAFCClipMapping::createWithAuroraGT(6, "Files/prince_m05.mmp");
+    m_sprite1->addClipMapping(mapping);
+    mapping = CCAFCClipMapping::createWithAuroraGT(7, "Files/prince_m06.mmp");
+    m_sprite1->addClipMapping(mapping);
+    mapping = CCAFCClipMapping::createWithAuroraGT(8, "Files/prince_m07.mmp");
+    m_sprite1->addClipMapping(mapping);
+    
+    CCLabelTTF* label = CCLabelTTF::create("Switch Clip Mapping", "Helvetica", 16);
+    CCMenuItemLabel* item = CCMenuItemLabel::create(label,
+                                                    this,
+                                                    menu_selector(AnimClipMappingAuroraGT::onSwitchClipMapping));
+    item->setPosition(ccp(origin.x + visibleSize.width / 2,
+                          origin.y + visibleSize.height / 7));
+    CCMenu* menu = CCMenu::create(item, NULL);
+    menu->setPosition(CCPointZero);
+    addChild(menu);
+    
+    scheduleUpdate();
+    
+    setTouchEnabled(true);
+    setTouchMode(kCCTouchesOneByOne);
+}
+
+void AnimClipMappingAuroraGT::onSwitchClipMapping(CCObject* sender) {
+    switch(m_nextMapping) {
+        case 0:
+            m_sprite1->playAnimation(78);
+            break;
+        default:
+            m_sprite1->playAnimation(78, m_nextMapping);
+            break;
+    }
+    
+    m_nextMapping++;
+    m_nextMapping %= 9;
+}
+
+bool AnimClipMappingAuroraGT::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
+    m_sprite1->setPaused(!m_sprite1->isPaused());
+    return false;
+}
+
+void AnimClipMappingAuroraGT::update(float dt) {
+    m_sprite1->tick(dt);
+}
+
+std::string AnimClipMappingAuroraGT::subtitle()
+{
+    return "Clip Mapping (AuroraGT)";
 }

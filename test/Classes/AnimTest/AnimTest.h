@@ -15,6 +15,7 @@ enum
     ANIM_AURORAGT,
     ANIM_SPRITEX,
     ANIM_SPRITEX2011,
+    ANIM_CLIP_MAPPING,
     ANIM_LAYER_COUNT,
 };
 
@@ -122,6 +123,22 @@ private:
 public:
     virtual void onEnter();
     virtual string subtitle();
+    
+    virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void update(float dt);
+};
+
+class AnimClipMappingAuroraGT : public AnimDemo
+{
+private:
+	CCAuroraSprite* m_sprite1;
+	int m_nextMapping;
+    
+public:
+    virtual void onEnter();
+    virtual string subtitle();
+    
+    void onSwitchClipMapping(CCObject* sender);
     
     virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
     virtual void update(float dt);
