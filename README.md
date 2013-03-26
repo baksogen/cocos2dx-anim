@@ -1,9 +1,12 @@
 cocos2dx-anim
 =============
+cocos2d-x is lack of frame animation support, so I will migrate some code of WiEngine. 
 
-cocos2d-x is lack of frame animation support, so I will migrate some code of WiEngine. For skeletal animation, there
-is a tools called Spine and recently it released runtime for cocos2d-x. However, I will provide my Spine implementation
-and maybe it will be better than official? Of course I will migrate frame animation code first.
+Known-Issue
+=============
+I think there is a bug in CCTextureAtlas, so animation with multiple textures doesn't work. Here is issue I submit to 
+cocos2d-x: https://github.com/cocos2d/cocos2d-x/issues/2264. In demos, only Arctic demo uses multiple textures, so it 
+looks weird.
 
 Tools Supported
 =============
