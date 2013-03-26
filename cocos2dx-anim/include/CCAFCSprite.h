@@ -212,12 +212,6 @@ protected:
 public:
 	virtual ~CCAFCSprite();
 
-	/// @see CCNode::updateMesh
-	virtual void updateMesh();
-
-	/// @see CCNode::updateMeshColor
-	virtual void updateMeshColor();
-
 	/// @see CCNode::addChild(CCNode*, int, int)
 	virtual void addChild(CCNode* child, int z, int tag);
     

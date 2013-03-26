@@ -51,6 +51,13 @@ CCAFCSprite::CCAFCSprite() :
 		m_ignoreFrameOffset(false),
 		m_flipX(false),
 		m_flipY(false) {
+    // blend func
+    m_sBlendFunc.src = CC_BLEND_SRC;
+    m_sBlendFunc.dst = CC_BLEND_DST;
+            
+    // shader program
+    setShaderProgram(CCShaderCache::sharedShaderCache()->
+                     programForKey(kCCShader_PositionTextureColor));
 }
 
 CCAFCSprite::~CCAFCSprite() {
@@ -122,6 +129,11 @@ void CCAFCSprite::draw() {
         for(SpriteBatchNodePtrList::iterator iter = m_sheetList.begin(); iter != m_sheetList.end(); iter++) {
             (*iter)->setUserData(m_drawMarkers + (iter - m_sheetList.begin()));
         }
+    }
+    
+    // update children transform
+    for(SpriteBatchNodePtrList::iterator iter = m_sheetList.begin(); iter != m_sheetList.end(); iter++) {
+        arrayMakeObjectsPerformSelector((*iter)->getChildren(), updateTransform, CCSprite*);
     }
     
     // draw by clip order

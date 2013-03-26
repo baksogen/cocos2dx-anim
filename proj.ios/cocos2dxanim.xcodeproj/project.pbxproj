@@ -140,6 +140,7 @@
 		92848A6017007CF200303D10 /* CCSPXLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSPXLoader.cpp; sourceTree = "<group>"; };
 		92848A6117007CF200303D10 /* CCSPXManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSPXManager.cpp; sourceTree = "<group>"; };
 		92848A6217007CF200303D10 /* CCSPXSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCSPXSprite.cpp; sourceTree = "<group>"; };
+		92A1392B170150CA007CB069 /* cocos2d-anim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cocos2d-anim.h"; sourceTree = "<group>"; };
 		92B516E416E86020009F3536 /* libcocos2dxanim.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcocos2dxanim.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B516E716E86020009F3536 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		92DFBC1016E860D00016648F /* cocos2dx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2dx.xcodeproj; path = "../../cocos2d-x/cocos2dx/proj.ios/cocos2dx.xcodeproj"; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 		92848A1E17007CF200303D10 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				92A1392B170150CA007CB069 /* cocos2d-anim.h */,
 				92848A1F17007CF200303D10 /* CCAFCAnimation.h */,
 				92848A2017007CF200303D10 /* CCAFCClip.h */,
 				92848A2117007CF200303D10 /* CCAFCClipMapping.h */,
