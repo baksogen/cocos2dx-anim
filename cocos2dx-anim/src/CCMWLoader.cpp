@@ -271,7 +271,7 @@ CCMWFileData* CCMWLoader::load(const char* path) {
 	unsigned long len;
 	string mappedPath = CCUtils::mapLocalPath(path);
 	char* raw = (char*)CCFileUtils::sharedFileUtils()->getFileData(mappedPath.c_str(), "rb", &len);
-	CCMWFileData* data = load(raw, (size_t)len, 1);
+	CCMWFileData* data = load(raw, (size_t)len, 1 / CC_CONTENT_SCALE_FACTOR());
 	data->m_path = path;
 	free(raw);
 

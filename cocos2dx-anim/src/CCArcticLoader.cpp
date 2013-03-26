@@ -219,7 +219,7 @@ CCArcticFileData* CCArcticLoader::load(const char* asPath) {
 	unsigned long len;
 	string mappedPath = CCUtils::mapLocalPath(asPath);
 	char* data = (char*)CCFileUtils::sharedFileUtils()->getFileData(mappedPath.c_str(), "rb", &len);
-	CCArcticFileData* as = load(data, (size_t)len, 1);
+	CCArcticFileData* as = load(data, (size_t)len, 1 / CC_CONTENT_SCALE_FACTOR());
 	as->m_path = asPath;
 	free(data);
 	return as;

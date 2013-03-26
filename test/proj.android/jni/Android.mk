@@ -22,10 +22,10 @@ LOCAL_MODULE_FILENAME := libtestcpp
 LOCAL_SRC_FILES := $(call all-cpp-files-under,.) \
 	$(call all-cpp-files-under,../../Classes)
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dx_static cocos2dx-common cocos2dx-json
+LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dx_static cocos2dx-common cocos2dx-anim
 
 include $(BUILD_SHARED_LIBRARY)
 
 $(call import-module,cocos2dx-common)
-$(call import-module,cocos2dx-json)
+$(call import-module,cocos2dx-anim)
 $(call import-module,cocos2dx)

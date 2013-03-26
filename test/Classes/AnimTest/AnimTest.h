@@ -11,6 +11,10 @@ USING_NS_CC;
 enum
 {
     ANIM_MOTION_WELDER = 0,
+    ANIM_ARCTIC,
+    ANIM_AURORAGT,
+    ANIM_SPRITEX,
+    ANIM_SPRITEX2011,
     ANIM_LAYER_COUNT,
 };
 
@@ -46,6 +50,74 @@ private:
 	CCMWSprite* m_sprite3;
 	CCMWSprite* m_sprite4;
 	CCMWSprite* m_sprite5;
+    
+public:
+    virtual void onEnter();
+    virtual string subtitle();
+    
+    virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void update(float dt);
+};
+
+class AnimArctic : public AnimDemo
+{
+private:
+    CCArcticSprite* m_sprite1;
+	CCArcticSprite* m_sprite2;
+	CCArcticSprite* m_sprite3;
+    
+public:
+    virtual void onEnter();
+    virtual string subtitle();
+    
+    virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void update(float dt);
+};
+
+class AnimAuroraGT : public AnimDemo
+{
+private:
+	CCAuroraSprite* m_sprite1;
+	CCAuroraSprite* m_sprite2;
+	CCAuroraSprite* m_sprite3;
+    
+public:
+    virtual void onEnter();
+    virtual string subtitle();
+    
+    virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void update(float dt);
+};
+
+class AnimSpriteX : public AnimDemo
+{
+private:
+	CCSPXSprite* m_sprite1;
+	CCSPXSprite* m_sprite2;
+	CCSPXSprite* m_sprite3;
+	CCSPXSprite* m_sprite4;
+	CCSPXSprite* m_sprite5;
+	CCSPXSprite* m_sprite6;
+	CCSPXSprite* m_sprite7;
+    
+public:
+    virtual void onEnter();
+    virtual string subtitle();
+    
+    virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
+    virtual void update(float dt);
+};
+
+class AnimSpriteX2011 : public AnimDemo
+{
+private:
+	CCSPX3Sprite* m_sprite1;
+	CCSPX3Sprite* m_sprite2;
+	CCSPX3Sprite* m_sprite3;
+	CCSPX3Sprite* m_sprite4;
+	CCSPX3Sprite* m_sprite5;
+	CCSPX3Sprite* m_sprite6;
+	CCSPX3Sprite* m_sprite7;
     
 public:
     virtual void onEnter();

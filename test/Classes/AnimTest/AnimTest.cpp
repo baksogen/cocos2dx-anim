@@ -4,9 +4,17 @@
 #include "cocos2d-common.h"
 
 TESTLAYER_CREATE_FUNC(AnimMotionWelder);
+TESTLAYER_CREATE_FUNC(AnimArctic);
+TESTLAYER_CREATE_FUNC(AnimAuroraGT);
+TESTLAYER_CREATE_FUNC(AnimSpriteX);
+TESTLAYER_CREATE_FUNC(AnimSpriteX2011);
 
 static NEWTESTFUNC createFunctions[] = {
-    CF(AnimMotionWelder)
+    CF(AnimMotionWelder),
+    CF(AnimArctic),
+    CF(AnimAuroraGT),
+    CF(AnimSpriteX),
+    CF(AnimSpriteX2011)
 };
 
 static int sceneIdx=-1;
@@ -225,4 +233,358 @@ void AnimMotionWelder::update(float dt) {
 std::string AnimMotionWelder::subtitle()
 {
     return "Motion Welder";
+}
+
+//------------------------------------------------------------------
+//
+// Arctic
+//
+//------------------------------------------------------------------
+void AnimArctic::onEnter()
+{
+    AnimDemo::onEnter();
+    
+    // surface
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+    
+    // texture
+    CCTextureCache* tc = CCTextureCache::sharedTextureCache();
+    CCTexture2D* tex1 = tc->addImage("Files/fighterboby001.png");
+    CCTexture2D* tex2 = tc->addImage("Files/fighterarmor001.png");
+    CCTexture2D* tex3 = tc->addImage("Files/fighterweapon001.png");
+    
+    // animation 1
+    m_sprite1 = CCArcticSprite::create("Files/fighter.aspr", 0, tex1, tex2, tex3, NULL);
+    m_sprite1->setLoopCount(-1);
+    m_sprite1->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 3 / 4));
+    m_sprite1->setUnitInterval(0.1f);
+    m_sprite1->setDebugDrawFrameRect(true);
+    m_sprite1->setDebugDrawCollisionRect(true);
+    addChild(m_sprite1);
+    
+    // animation 2
+    m_sprite2 = CCArcticSprite::create("Files/fighter.aspr", 1, tex1, tex2, tex3, NULL);
+    m_sprite2->setLoopCount(-1);
+    m_sprite2->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 2 / 4));
+    m_sprite2->setUnitInterval(0.1f);
+    m_sprite2->setDebugDrawFrameRect(true);
+    m_sprite2->setDebugDrawCollisionRect(true);
+    addChild(m_sprite2);
+    
+    // animation 3
+    m_sprite3 = CCArcticSprite::create("Files/fighter.aspr", 2, tex1, tex2, tex3, NULL);
+    m_sprite3->setLoopCount(-1);
+    m_sprite3->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height / 4));
+    m_sprite3->setUnitInterval(0.1f);
+    m_sprite3->setDebugDrawFrameRect(true);
+    m_sprite3->setDebugDrawCollisionRect(true);
+    addChild(m_sprite3);
+    
+    scheduleUpdate();
+    
+    setTouchEnabled(true);
+    setTouchMode(kCCTouchesOneByOne);
+}
+
+bool AnimArctic::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
+    m_sprite1->setPaused(!m_sprite1->isPaused());
+    m_sprite2->setPaused(!m_sprite2->isPaused());
+    m_sprite3->setPaused(!m_sprite3->isPaused());
+    return false;
+}
+
+void AnimArctic::update(float dt) {
+    m_sprite1->tick(dt);
+    m_sprite2->tick(dt);
+    m_sprite3->tick(dt);
+}
+
+std::string AnimArctic::subtitle()
+{
+    return "Arctic";
+}
+
+//------------------------------------------------------------------
+//
+// Aurora GT
+//
+//------------------------------------------------------------------
+void AnimAuroraGT::onEnter()
+{
+    AnimDemo::onEnter();
+    
+    // surface
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+    
+    // texture
+    CCTextureCache* tc = CCTextureCache::sharedTextureCache();
+    CCTexture2D* tex = tc->addImage("Files/prince.png");
+    
+    // animation 1
+    m_sprite1 = CCAuroraSprite::create("Files/prince.bsprite", 78, tex, NULL);
+    m_sprite1->setLoopCount(-1);
+    m_sprite1->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 3 / 4));
+    m_sprite1->setUnitInterval(0.1f);
+    m_sprite1->setDebugDrawFrameRect(true);
+    m_sprite1->setDebugDrawCollisionRect(true);
+    addChild(m_sprite1);
+    
+    // animation 2
+    m_sprite2 = CCAuroraSprite::create("Files/prince.bsprite", 99, tex, NULL);
+    m_sprite2->setLoopCount(-1);
+    m_sprite2->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 2 / 4));
+    m_sprite2->setUnitInterval(0.1f);
+    m_sprite2->setDebugDrawFrameRect(true);
+    m_sprite2->setDebugDrawCollisionRect(true);
+    addChild(m_sprite2);
+    
+    // animation 3
+    m_sprite3 = CCAuroraSprite::create("Files/prince.bsprite", 66, tex, NULL);
+    m_sprite3->setLoopCount(-1);
+    m_sprite3->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height / 4));
+    m_sprite3->setUnitInterval(0.1f);
+    m_sprite3->setDebugDrawFrameRect(true);
+    m_sprite3->setDebugDrawCollisionRect(true);
+    addChild(m_sprite3);
+    
+    scheduleUpdate();
+    
+    setTouchEnabled(true);
+    setTouchMode(kCCTouchesOneByOne);
+}
+
+bool AnimAuroraGT::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
+    m_sprite1->setPaused(!m_sprite1->isPaused());
+    m_sprite2->setPaused(!m_sprite2->isPaused());
+    m_sprite3->setPaused(!m_sprite3->isPaused());
+    return false;
+}
+
+void AnimAuroraGT::update(float dt) {
+    m_sprite1->tick(dt);
+    m_sprite2->tick(dt);
+    m_sprite3->tick(dt);
+}
+
+std::string AnimAuroraGT::subtitle()
+{
+    return "AuroraGT";
+}
+
+//------------------------------------------------------------------
+//
+// SpriteX
+//
+//------------------------------------------------------------------
+void AnimSpriteX::onEnter()
+{
+    AnimDemo::onEnter();
+    
+    // surface
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+    
+    // texture
+    CCTextureCache* tc = CCTextureCache::sharedTextureCache();
+    CCTexture2D* tex = tc->addImage("Files/spx_test.png");
+    
+    // animation 1
+    // SpriteX doesn't support tick mode, but you can use setForceTickMode
+    // to enforce using tick mode. this animation use a large unit interval
+    // so the animation plays slow
+    m_sprite1 = CCSPXSprite::create("Files/spx_test.sprite", tex, 0);
+    m_sprite1->setLoopCount(-1);
+    m_sprite1->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 7 / 8));
+    m_sprite1->setForceTickMode(true);
+    m_sprite1->setUnitInterval(0.5f);
+    addChild(m_sprite1);
+    
+    // animation 2
+    m_sprite2 = CCSPXSprite::create("Files/spx_test.sprite", tex, 1);
+    m_sprite2->setLoopCount(-1);
+    m_sprite2->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 6 / 8));
+    addChild(m_sprite2);
+    
+    // animation 3, 反着放
+    m_sprite3 = CCSPXSprite::create("Files/spx_test.sprite", tex, 2);
+    m_sprite3->setLoopCount(-1);
+    m_sprite3->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 5 / 8));
+    m_sprite3->setReverse(true);
+    addChild(m_sprite3);
+    
+    // animation 4
+    m_sprite4 = CCSPXSprite::create("Files/spx_test.sprite", tex, 3);
+    m_sprite4->setLoopCount(-1);
+    m_sprite4->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 4 / 8));
+    addChild(m_sprite4);
+    
+    // animation 5, y轴倒转播放
+    m_sprite5 = CCSPXSprite::create("Files/spx_test.sprite", tex, 4);
+    m_sprite5->setLoopCount(-1);
+    m_sprite5->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 3 / 8));
+    m_sprite5->setFlipY(true);
+    addChild(m_sprite5);
+    
+    // animation 6
+    m_sprite6 = CCSPXSprite::create("Files/spx_test.sprite", tex, 5);
+    m_sprite6->setLoopCount(-1);
+    m_sprite6->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 2 / 8));
+    addChild(m_sprite6);
+    
+    // animation 7
+    m_sprite7 = CCSPXSprite::create("Files/spx_test.sprite", tex, 6);
+    m_sprite7->setLoopCount(-1);
+    m_sprite7->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height / 8));
+    addChild(m_sprite7);
+    
+    scheduleUpdate();
+    
+    setTouchEnabled(true);
+    setTouchMode(kCCTouchesOneByOne);
+}
+
+bool AnimSpriteX::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
+    m_sprite1->setPaused(!m_sprite1->isPaused());
+    m_sprite2->setPaused(!m_sprite2->isPaused());
+    m_sprite3->setPaused(!m_sprite3->isPaused());
+    m_sprite4->setPaused(!m_sprite4->isPaused());
+    m_sprite5->setPaused(!m_sprite5->isPaused());
+    m_sprite6->setPaused(!m_sprite6->isPaused());
+    m_sprite7->setPaused(!m_sprite7->isPaused());
+    return false;
+}
+
+void AnimSpriteX::update(float dt) {
+    m_sprite1->tick(dt);
+    m_sprite2->tick(dt);
+    m_sprite3->tick(dt);
+    m_sprite4->tick(dt);
+    m_sprite5->tick(dt);
+    m_sprite6->tick(dt);
+    m_sprite7->tick(dt);
+}
+
+std::string AnimSpriteX::subtitle()
+{
+    return "SpriteX";
+}
+
+//------------------------------------------------------------------
+//
+// SpriteX 2011
+//
+//------------------------------------------------------------------
+void AnimSpriteX2011::onEnter()
+{
+    AnimDemo::onEnter();
+    
+    // surface
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+    
+    // texture
+    CCTextureCache* tc = CCTextureCache::sharedTextureCache();
+    CCTexture2D* tex = tc->addImage("Files/spx3_test.png");
+    
+    // animation 1
+    // SpriteX doesn't support tick mode, but you can use setForceTickMode
+    // to enforce using tick mode. this animation use a large unit interval
+    // so the animation plays slow
+    m_sprite1 = CCSPX3Sprite::create("Files/spx3_test.sprite", 0, tex, NULL);
+    m_sprite1->setLoopCount(-1);
+    m_sprite1->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 7 / 8));
+    m_sprite1->setForceTickMode(true);
+    m_sprite1->setUnitInterval(0.5f);
+    addChild(m_sprite1);
+    
+    // animation 2
+    m_sprite2 = CCSPX3Sprite::create("Files/spx3_test.sprite", 1, tex, NULL);
+    m_sprite2->setLoopCount(-1);
+    m_sprite2->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 6 / 8));
+    addChild(m_sprite2);
+    
+    // animation 3, 反着放
+    m_sprite3 = CCSPX3Sprite::create("Files/spx3_test.sprite", 2, tex, NULL);
+    m_sprite3->setLoopCount(-1);
+    m_sprite3->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 5 / 8));
+    m_sprite3->setReverse(true);
+    addChild(m_sprite3);
+    
+    // animation 4
+    m_sprite4 = CCSPX3Sprite::create("Files/spx3_test.sprite", 3, tex, NULL);
+    m_sprite4->setLoopCount(-1);
+    m_sprite4->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 4 / 8));
+    addChild(m_sprite4);
+    
+    // animation 5, y轴倒转播放
+    m_sprite5 = CCSPX3Sprite::create("Files/spx3_test.sprite", 4, tex, NULL);
+    m_sprite5->setLoopCount(-1);
+    m_sprite5->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 3 / 8));
+    m_sprite5->setFlipY(true);
+    addChild(m_sprite5);
+    
+    // animation 6
+    m_sprite6 = CCSPX3Sprite::create("Files/spx3_test.sprite", 5, tex, NULL);
+    m_sprite6->setLoopCount(-1);
+    m_sprite6->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height * 2 / 8));
+    addChild(m_sprite6);
+    
+    // animation 7
+    m_sprite7 = CCSPX3Sprite::create("Files/spx3_test.sprite", 6, tex, NULL);
+    m_sprite7->setLoopCount(-1);
+    m_sprite7->setPosition(ccp(origin.x + visibleSize.width / 2,
+                               origin.y + visibleSize.height / 8));
+    addChild(m_sprite7);
+    
+    scheduleUpdate();
+    
+    setTouchEnabled(true);
+    setTouchMode(kCCTouchesOneByOne);
+}
+
+bool AnimSpriteX2011::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
+    m_sprite1->setPaused(!m_sprite1->isPaused());
+    m_sprite2->setPaused(!m_sprite2->isPaused());
+    m_sprite3->setPaused(!m_sprite3->isPaused());
+    m_sprite4->setPaused(!m_sprite4->isPaused());
+    m_sprite5->setPaused(!m_sprite5->isPaused());
+    m_sprite6->setPaused(!m_sprite6->isPaused());
+    m_sprite7->setPaused(!m_sprite7->isPaused());
+    return false;
+}
+
+void AnimSpriteX2011::update(float dt) {
+    m_sprite1->tick(dt);
+    m_sprite2->tick(dt);
+    m_sprite3->tick(dt);
+    m_sprite4->tick(dt);
+    m_sprite5->tick(dt);
+    m_sprite6->tick(dt);
+    m_sprite7->tick(dt);
+}
+
+std::string AnimSpriteX2011::subtitle()
+{
+    return "SpriteX 2011";
 }

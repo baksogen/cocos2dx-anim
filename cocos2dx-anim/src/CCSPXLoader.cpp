@@ -205,7 +205,7 @@ CCSPXFileData* CCSPXLoader::load(const char* spxPath) {
 	unsigned long len;
 	string mappedPath = CCUtils::mapLocalPath(spxPath);
 	char* data = (char*)CCFileUtils::sharedFileUtils()->getFileData(mappedPath.c_str(), "rb", &len);
-	CCSPXFileData* spx = load(data, (size_t)len, 1);
+	CCSPXFileData* spx = load(data, (size_t)len, 1 / CC_CONTENT_SCALE_FACTOR());
 	spx->m_path = spxPath;
 	free(data);
 	return spx;
