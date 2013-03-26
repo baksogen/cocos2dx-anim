@@ -1,6 +1,7 @@
 cocos2dx-anim
 =============
-cocos2d-x is lack of frame animation support, so I will migrate some code of WiEngine. 
+cocos2d-x is lack of frame animation support, so I ported the AFC animation feature of WiEngine. Now it is fully
+available in cocos2d-x. Oh, but please read below Known-Issue.
 
 Known-Issue
 =============
