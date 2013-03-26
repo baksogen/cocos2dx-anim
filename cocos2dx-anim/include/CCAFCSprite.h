@@ -87,7 +87,7 @@ public:
  * based on node size. \link CCAFCSprite CCAFCSprite\endlink provides \c getFrameRect methods to return a
  * minimum rectangle containing all clips of current frame
  */
-class CC_DLL CCAFCSprite : public CCNodeRGBA {
+class CC_DLL CCAFCSprite : public CCNodeRGBA, public CCBlendProtocol {
 protected:
 	/// \link CCSprite CCSprite\endlink list for every clip
 	typedef vector<CCSprite*> SpritePtrList;
@@ -123,7 +123,7 @@ protected:
 	bool m_forceTickMode;
 
 	/// accumulated offset till to current frame
-	ccPoint m_frameOffset;
+	CCPoint m_frameOffset;
 
 	/**
 	 * true indicating ignore frame offset, default is false.
@@ -172,6 +172,12 @@ protected:
 
 	/// callback
 	CCAFCSpriteCallback* m_callback;
+    
+    /// blend function
+    ccBlendFunc m_sBlendFunc;
+    
+    /// sprite batch node draw marker array
+    int* m_drawMarkers;
 
 private:
 	void invokeOnAFCAnimationFrameChanged();
@@ -214,6 +220,18 @@ public:
 
 	/// @see CCNode::addChild(CCNode*, int, int)
 	virtual void addChild(CCNode* child, int z, int tag);
+    
+    /// @see CCNode::draw
+    virtual void draw();
+    
+    /// @see CCRGBAProtocol::setColor
+    virtual void setColor(const ccColor3B& color);
+    
+    /// @see CCBlendProtocol::setBlendFunc
+    virtual void setBlendFunc(ccBlendFunc blendFunc);
+    
+    /// @see CCBlendProtocol::getBlendFunc
+    virtual ccBlendFunc getBlendFunc() { return m_sBlendFunc; }
 
 	/**
 	 * Get file data object. A file data is a top level object, it may contain
@@ -309,7 +327,7 @@ public:
 	 *
 	 * @return current frame offset
 	 */
-	ccPoint getFrameOffset() { return m_frameOffset; }
+	CCPoint getFrameOffset() { return m_frameOffset; }
 
 	/**
 	 * Set animation event callback
@@ -465,30 +483,30 @@ public:
 	 * Get collision rect of current frame, in node coordinates
 	 *
 	 * @param index index of collision rect
-	 * @return \link ccRect ccRect\endlink, if no collision rect in current frame or
+	 * @return \link CCRect CCRect\endlink, if no collision rect in current frame or
 	 * 		\c index is invalid, return a zero rect
 	 */
-	ccRect getCollisionRect(int index);
+	CCRect getCollisionRect(int index);
 
 	/**
 	 * Get collision rect of current frame, in parent node coordinates. If node has rotation, then
 	 * returned rectangle may be a circumscribed rectangle
 	 *
 	 * @param index index of collision rect
-	 * @return \link ccRect ccRect\endlink, if no collision rect in current frame or
+	 * @return \link CCRect CCRect\endlink, if no collision rect in current frame or
 	 * 		\c index is invalid, return a zero rect
 	 */
-	ccRect getCollisionRectRelativeToParent(int index);
+	CCRect getCollisionRectRelativeToParent(int index);
 
 	/**
 	 * Get collision rect of current frame, in global coordinates. If node has rotation, then
 	 * returned rectangle may be a circumscribed rectangle
 	 *
 	 * @param index index of collision rect
-	 * @return \link ccRect ccRect\endlink, if no collision rect in current frame or
+	 * @return \link CCRect CCRect\endlink, if no collision rect in current frame or
 	 * 		\c index is invalid, return a zero rect
 	 */
-	ccRect getCollisionRectRelativeToWorld(int index);
+	CCRect getCollisionRectRelativeToWorld(int index);
 
 	/**
 	 * Get current frame bound relative to sprite node. It returns a minimum rectangle which
@@ -496,7 +514,7 @@ public:
 	 *
 	 * @return minimum rectangle which contains all clips, relative to node coordinates
 	 */
-	ccRect getFrameRect();
+	CCRect getFrameRect();
 
 	/**
 	 * Get current frame bound relative to parent node. It returns a minimum rectangle
@@ -505,7 +523,7 @@ public:
 	 * @return minimum rectangle which contains all clips, relative to parent node
 	 * 		coordinates
 	 */
-	ccRect getFrameRectRelativeToParent();
+	CCRect getFrameRectRelativeToParent();
 
 	/**
 	 * Get current frame bound relative to world. It returns a minimum rectangle
@@ -513,7 +531,7 @@ public:
 	 *
 	 * @return minimum rectangle which contains all clips, relative to global coordinates
 	 */
-	ccRect getFrameRectRelativeToWorld();
+	CCRect getFrameRectRelativeToWorld();
 
 	/**
 	 * Set debug draw flag of drawing frame rect

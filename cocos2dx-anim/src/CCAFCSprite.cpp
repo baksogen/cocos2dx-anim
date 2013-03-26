@@ -31,6 +31,7 @@ NS_CC_BEGIN
 
 CCAFCSprite::CCAFCSprite() :
 		m_animationData(NULL),
+        m_drawMarkers(NULL),
 		m_curAnimationIndex(-1),
 		m_curFrame(0),
 		m_numOfFrame(0),
@@ -46,7 +47,7 @@ CCAFCSprite::CCAFCSprite() :
 		m_debugDrawFrameRect(false),
 		m_debugDrawCollisionRect(false),
 		m_callback(NULL),
-		m_frameOffset(ccpZero),
+		m_frameOffset(CCPointZero),
 		m_ignoreFrameOffset(false),
 		m_flipX(false),
 		m_flipY(false) {
@@ -63,6 +64,11 @@ CCAFCSprite::~CCAFCSprite() {
 		(*iter)->release();
 	}
 	CC_SAFE_RELEASE(m_animationData);
+    
+    if(m_drawMarkers) {
+        free(m_drawMarkers);
+        m_drawMarkers = NULL;
+    }
 }
 
 void CCAFCSprite::invokeOnAFCAnimationFrameChanged() {
@@ -99,6 +105,77 @@ void CCAFCSprite::initSpriteFromAnimationData() {
 	}
 }
 
+void CCAFCSprite::draw() {
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, "CCAFCSprite - draw");
+    
+    CC_NODE_DRAW_SETUP();
+    
+    ccGLBlendFunc(m_sBlendFunc.src, m_sBlendFunc.dst);
+    
+    ccGLEnableVertexAttribs(kCCVertexAttribFlag_PosColorTex);
+    
+    // check draw marker
+    if(m_drawMarkers) {
+        memset(m_drawMarkers, 0, m_sheetList.size() * sizeof(int));
+    } else {
+        m_drawMarkers = (int*)calloc(m_sheetList.size(), sizeof(int));
+        for(SpriteBatchNodePtrList::iterator iter = m_sheetList.begin(); iter != m_sheetList.end(); iter++) {
+            (*iter)->setUserData(m_drawMarkers + (iter - m_sheetList.begin()));
+        }
+    }
+    
+    // draw by clip order
+    int numOfQuads = 0;
+    CCSpriteBatchNode* lastSheet = NULL;
+    for(SpritePtrList::iterator iter = m_spriteList.begin(); iter != m_spriteList.end(); iter++) {
+        CCSprite* sprite = *iter;
+		if(sprite->isVisible()) {
+			CCSpriteBatchNode* sheet = (CCSpriteBatchNode*)sprite->getParent();
+			if(sheet != lastSheet) {
+				// draw last sheet
+				if(numOfQuads != 0) {
+                    CCTextureAtlas* atlas = lastSheet->getTextureAtlas();
+                    int* pMarker = (int*)lastSheet->getUserData();
+                    atlas->drawNumberOfQuads(numOfQuads, *pMarker);
+                    *pMarker += numOfQuads;
+				}
+                
+				// change last sheet and reset number of quads
+				lastSheet = sheet;
+				numOfQuads = 1;
+			} else {
+				numOfQuads++;
+			}
+		}
+	}
+    
+    // draw last sheet
+	if(numOfQuads != 0) {
+        CCTextureAtlas* atlas = lastSheet->getTextureAtlas();
+        int* pMarker = (int*)lastSheet->getUserData();
+        atlas->drawNumberOfQuads(numOfQuads, *pMarker);
+        *pMarker += numOfQuads;
+	}
+    
+    CC_INCREMENT_GL_DRAWS(1);
+    
+    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, "CCAFCSprite - draw");
+}
+
+void CCAFCSprite::setBlendFunc(ccBlendFunc blendFunc) {
+    m_sBlendFunc = blendFunc;
+    for(SpriteBatchNodePtrList::iterator iter = m_sheetList.begin(); iter != m_sheetList.end(); iter++) {
+		(*iter)->setBlendFunc(blendFunc);
+	}
+}
+
+void CCAFCSprite::setColor(const ccColor3B& color) {
+    CCNodeRGBA::setColor(color);
+    for(SpritePtrList::iterator iter = m_spriteList.begin(); iter != m_spriteList.end(); iter++) {
+		(*iter)->setColor(color);
+	}
+}
+
 void CCAFCSprite::replaceTextures(CCTexture2D* tex, ...) {
 	// release old batch nodes
 	for(SpritePtrList::iterator iter = m_spriteList.begin(); iter != m_spriteList.end(); iter++) {
@@ -124,6 +201,12 @@ void CCAFCSprite::replaceTextures(CCTexture2D* tex, ...) {
 		sheet->retain();
 	}
 	va_end(textures);
+    
+    // release draw marker
+    if(m_drawMarkers) {
+        free(m_drawMarkers);
+        m_drawMarkers = NULL;
+    }
 
 	// start animation from very beginning
 	if(m_curAnimationIndex >= 0)
@@ -156,6 +239,12 @@ void CCAFCSprite::replaceTextures(CCTexture2D** tex, int count) {
 	}
 	m_sheetList.clear();
 	m_sheetList = tmp;
+    
+    // release draw marker
+    if(m_drawMarkers) {
+        free(m_drawMarkers);
+        m_drawMarkers = NULL;
+    }
 
 	// start animation from very beginning
 	if(m_curAnimationIndex >= 0)
@@ -269,7 +358,7 @@ void CCAFCSprite::setFrameIndex(int index) {
 		CCAFCClipType clipType = clip->getType();
 		if(clipType == AFC_CLIP_IMAGE) {
 			// get clip pos with frame increment added
-			ccPoint clipPos = ccptAdd(clipData.clipPos, m_ignoreFrameOffset ? ccpZero : m_frameOffset);
+			CCPoint clipPos = ccpAdd(ccp2CCP(clipData.clipPos), m_ignoreFrameOffset ? CCPointZero : m_frameOffset);
 
 			// check flip flag
 			if(flipX)
@@ -448,8 +537,8 @@ int CCAFCSprite::getCollisionRectCount() {
 	return 0;
 }
 
-ccRect CCAFCSprite::getCollisionRect(int index) {
-	ccRect ret = ccrZero;
+CCRect CCAFCSprite::getCollisionRect(int index) {
+	CCRect ret = CCRectZero;
 	CCAFCAnimation* anim = getCurrentAnimationData();
 	if(anim) {
 		CCAFCFrame* frame = anim->getFrameAt(m_curFrame);
@@ -457,16 +546,16 @@ ccRect CCAFCSprite::getCollisionRect(int index) {
 			CCAFCClip* clip = frame->getClipAt(AFC_CLIP_COLLISION_RECT, index);
 			if(clip) {
 				CCAFCClipData& data = clip->getData();
-				ret.width = data.cr.size.width;
-				ret.height = data.cr.size.height;
-				ret.x = data.clipPos.x - ret.width / 2;
-				ret.y = data.clipPos.y - ret.height / 2;
+				ret.size.width = data.cr.size.width;
+				ret.size.height = data.cr.size.height;
+				ret.origin.x = data.clipPos.x - ret.size.width / 2;
+				ret.origin.y = data.clipPos.y - ret.size.height / 2;
 
 				if(m_flipX) {
-					ret.x = -ret.x - ret.width;
+					ret.origin.x = -ret.origin.x - ret.size.width;
 				}
 				if(m_flipY) {
-					ret.y = -ret.y - ret.height;
+					ret.origin.y = -ret.origin.y - ret.size.height;
 				}
 			}
 		}
@@ -475,22 +564,18 @@ ccRect CCAFCSprite::getCollisionRect(int index) {
 	return ret;
 }
 
-ccRect CCAFCSprite::getCollisionRectRelativeToParent(int index) {
-	ccRect r = getCollisionRect(index);
-	CCAffineTransform t = getTransformMatrix();
-	r = wyaTransformRect(t, r);
-	return r;
+CCRect CCAFCSprite::getCollisionRectRelativeToParent(int index) {
+	CCRect r = getCollisionRect(index);
+    return CCRectApplyAffineTransform(r, nodeToParentTransform());
 }
 
-ccRect CCAFCSprite::getCollisionRectRelativeToWorld(int index) {
-	ccRect r = getCollisionRect(index);
-	CCAffineTransform t = getNodeToWorldTransform();
-	r = wyaTransformRect(t, r);
-	return r;
+CCRect CCAFCSprite::getCollisionRectRelativeToWorld(int index) {
+	CCRect r = getCollisionRect(index);
+    return CCRectApplyAffineTransform(r, nodeToWorldTransform());
 }
 
-ccRect CCAFCSprite::getFrameRect() {
-	ccRect ret = ccrZero;
+CCRect CCAFCSprite::getFrameRect() {
+	CCRect ret = CCRectZero;
 	bool first = true;
 	CCAFCAnimation* anim = getCurrentAnimationData();
 	if(anim) {
@@ -498,12 +583,15 @@ ccRect CCAFCSprite::getFrameRect() {
 		if(frame) {
 			int count = frame->getClipCount(AFC_CLIP_IMAGE);
 			for (int i = 0; i < count; i++) {
-				CCSprite* sprite = (CCSprite*) CCArrayGet(m_spriteList, i);
+				CCSprite* sprite = m_spriteList.at(i);
+                CCPoint origin = CCUtils::getOrigin(sprite);
+                CCSize size = sprite->getContentSize();
 				if(first) {
-					ret = ccr(sprite->getOriginX(), sprite->getOriginY(), sprite->getWidth(), sprite->getHeight());
+					ret = CCRectMake(origin.x, origin.y, size.width, size.height);
 					first = false;
 				} else {
-					ret = wyrCombine(ret, ccr(sprite->getOriginX(), sprite->getOriginY(), sprite->getWidth(), sprite->getHeight()));
+                    CCRect frameRect = CCRectMake(origin.x, origin.y, size.width, size.height);
+                    ret = CCUtils::combine(ret, frameRect);
 				}
 			}
 		}
@@ -512,32 +600,28 @@ ccRect CCAFCSprite::getFrameRect() {
 	return ret;
 }
 
-ccRect CCAFCSprite::getFrameRectRelativeToParent() {
-	ccRect r = getFrameRect();
-	CCAffineTransform t = getTransformMatrix();
-	r = wyaTransformRect(t, r);
-	return r;
+CCRect CCAFCSprite::getFrameRectRelativeToParent() {
+	CCRect r = getFrameRect();
+    return CCRectApplyAffineTransform(r, nodeToParentTransform());
 }
 
-ccRect CCAFCSprite::getFrameRectRelativeToWorld() {
-	ccRect r = getFrameRect();
-	CCAffineTransform t = getNodeToWorldTransform();
-	r = wyaTransformRect(t, r);
-	return r;
+CCRect CCAFCSprite::getFrameRectRelativeToWorld() {
+	CCRect r = getFrameRect();
+    return CCRectApplyAffineTransform(r, nodeToWorldTransform());
 }
 
 void CCAFCSprite::addClipMapping(CCAFCClipMapping* mapping) {
 	if(mapping) {
-		CCArrayPush(m_mappingList, mapping);
+        m_mappingList.push_back(mapping);
 		mapping->retain();
 	}
 }
 
 void CCAFCSprite::removeClipMappingByTag(int tag) {
-	for(int i = 0; i < m_mappingList->num; i++) {
-		CCAFCClipMapping* mapping = (CCAFCClipMapping*)CCArrayGet(m_mappingList, i);
+    for(AFCClipMappingPtrList::iterator iter = m_mappingList.begin(); iter != m_mappingList.end(); iter++) {
+        CCAFCClipMapping* mapping = *iter;
 		if(mapping->getTag() == tag) {
-			CCArrayDeleteIndex(m_mappingList, i);
+            m_mappingList.erase(iter);
 			mapping->release();
 			break;
 		}
@@ -545,8 +629,8 @@ void CCAFCSprite::removeClipMappingByTag(int tag) {
 }
 
 CCAFCClipMapping* CCAFCSprite::getClipMappingByTag(int tag) {
-	for(int i = 0; i < m_mappingList->num; i++) {
-		CCAFCClipMapping* mapping = (CCAFCClipMapping*)CCArrayGet(m_mappingList, i);
+    for(AFCClipMappingPtrList::iterator iter = m_mappingList.begin(); iter != m_mappingList.end(); iter++) {
+        CCAFCClipMapping* mapping = *iter;
 		if(mapping->getTag() == tag) {
 			return mapping;
 		}
