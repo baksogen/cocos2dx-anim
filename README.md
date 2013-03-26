@@ -16,8 +16,6 @@ Tools Supported
   * SpriteX 2011, trail download: http://wiengine.wiyun.com/tools/SpriteX_2011_free_version.rar, full version is not free
   * Arctic, download: http://wiengine.wiyun.com/tools/Arctic_0.2.5.zip
   * AuroraGT 0.7.3, search it in internet, I don't provide download link here.
- * Skeletal Animation Tools
-  * Spine, download it from http://esotericsoftware.com. It is not free, but there is trail version with full functions except exporting.
 
 Requirement
 ===========
