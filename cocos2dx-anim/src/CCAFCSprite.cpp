@@ -166,7 +166,49 @@ void CCAFCSprite::draw() {
         CCTextureAtlas* atlas = lastSheet->getTextureAtlas();
         int* pMarker = (int*)lastSheet->getUserData();
         atlas->drawNumberOfQuads(numOfQuads, *pMarker);
-        *pMarker += numOfQuads;
+	}
+    
+    // debug draw frame rect
+	if(m_debugDrawFrameRect) {
+		CCRect bound = getFrameRect();
+        ccDrawColor4B(0, 255, 0, 255);
+        ccDrawRect(bound.origin, ccpAdd(bound.origin,
+                                        ccp(bound.size.width, bound.size.height)));
+		ccDrawColor4B(255, 255, 255, 255);
+	}
+    
+    // debug draw collision rect
+    if(m_debugDrawCollisionRect) {
+        ccDrawColor4B(0, 255, 0, 255);
+		CCAFCAnimation* anim = getCurrentAnimationData();
+		if(anim) {
+			CCAFCFrame* frame = anim->getFrameAt(m_curFrame);
+			if(frame) {
+				int count = frame->getClipCount();
+				for (int i = 0; i < count; i++) {
+					CCAFCClip* clip = frame->getClipAt(i);
+					if(clip->getType() == AFC_CLIP_COLLISION_RECT) {
+						CCAFCClipData& data = clip->getData();
+                        CCPoint origin = ccp(data.clipPos.x - data.cr.size.width / 2,
+                                             data.clipPos.y - data.cr.size.height / 2);
+                        CCPoint dest = ccp(data.cr.size.width,
+                                           data.cr.size.height);
+                        
+						// check flip flag
+						if(m_flipX) {
+							origin.x = -origin.x - dest.x;
+						}
+						if(m_flipY) {
+							origin.y = -origin.y - dest.y;
+						}
+                        
+						// draw it
+                        ccDrawRect(origin, dest);
+					}
+				}
+			}
+		}
+        ccDrawColor4B(255, 255, 255, 255);
 	}
     
     CC_INCREMENT_GL_DRAWS(1);
