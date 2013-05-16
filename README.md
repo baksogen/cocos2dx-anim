@@ -7,7 +7,8 @@ Known-Issue
 =============
 I think there is a bug in CCTextureAtlas, so animation with multiple textures doesn't work. Here is issue I submit to 
 cocos2d-x: https://github.com/cocos2d/cocos2d-x/issues/2264. In demos, only Arctic demo uses multiple textures, so it 
-looks weird. I don't want to provide a third-party implementation of CCTextureAtlas, so you have to wait.
+looks weird. I don't want to provide a third-party implementation of CCTextureAtlas, you have to wait for bugfix from 
+cocos2d-x guys. However, I don't think they are diligent.
 
 Tools Supported
 =============
